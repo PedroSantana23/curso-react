@@ -2,14 +2,14 @@ import "./Photo.css";
 
 import { uploads } from "../../utils/config";
 
-// Components
+// components
 import Message from "../../components/Message";
-import { Link } from "react-router-dom";
 import PhotoItem from "../../components/PhotoItem";
 import LikeContainer from "../../components/LikeContainer";
+import { Link } from "react-router-dom";
 
-// Hooks
-import { useState, useEffect } from "react";
+// hooks
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
@@ -29,33 +29,30 @@ const Photo = () => {
     (state) => state.photo
   );
 
-  // Comentários
-  const [commentText, setCommentText] = useState("");
+  const [commentText, setCommentText] = useState();
 
-  // Dados da foto
-
-  // Carregar os dados da foto
+  // Load photo data
   useEffect(() => {
     dispatch(getPhoto(id));
   }, [dispatch, id]);
 
-  // Inserir like
+  // Like a photo
   const handleLike = () => {
     dispatch(like(photo._id));
 
     resetMessage();
   };
 
-  // Inserir comentário
+  // Insert a comment
   const handleComment = (e) => {
     e.preventDefault();
 
-    const commentData = {
+    const photoData = {
       comment: commentText,
       id: photo._id,
     };
 
-    dispatch(comment(commentData));
+    dispatch(comment(photoData));
 
     setCommentText("");
 
@@ -75,16 +72,17 @@ const Photo = () => {
         {message && <Message msg={message} type="success" />}
       </div>
       <div className="comments">
-        {photo.coments && (
+        {photo.comments && (
           <>
-            <h3>Comentários: ({photo.comments.length})</h3>
+            <h3>Comentários ({photo.comments.length}):</h3>
             <form onSubmit={handleComment}>
               <input
                 type="text"
-                placeholder="Insira o seu comentário..."
+                placeholder="Insira seu comentário..."
                 onChange={(e) => setCommentText(e.target.value)}
                 value={commentText || ""}
               />
+              <input type="submit" value="Enviar" />
             </form>
             {photo.comments.length === 0 && <p>Não há comentários...</p>}
             {photo.comments.map((comment) => (

@@ -1,6 +1,6 @@
 import { api, requestConfig } from "../utils/config";
 
-// Publicar uma foto
+// Publish an user's photo
 const publishPhoto = async (data, token) => {
   const config = requestConfig("POST", data, token, true);
 
@@ -15,7 +15,7 @@ const publishPhoto = async (data, token) => {
   }
 };
 
-// Buscar as fotos do usuário
+// Get user photos
 const getUserPhotos = async (id) => {
   const config = requestConfig("GET");
 
@@ -30,9 +30,9 @@ const getUserPhotos = async (id) => {
   }
 };
 
-// Excluir Foto
-const deletePhoto = async (id, token) => {
-  const config = requestConfig("DELETE", null, token);
+// Get photo
+const getPhoto = async (id) => {
+  const config = requestConfig("GET");
 
   try {
     const res = await fetch(api + "/photos/" + id, config)
@@ -45,7 +45,22 @@ const deletePhoto = async (id, token) => {
   }
 };
 
-// Atualizar uma foto
+// Delete a photo
+const deletePhoto = async (id, token) => {
+  const config = requestConfig("DELETE", "", token);
+
+  try {
+    const res = await fetch(api + "/photos/" + id, config)
+      .then((res) => res.json())
+      .catch((err) => err);
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Update a photo
 const updatePhoto = async (data, id, token) => {
   const config = requestConfig("PUT", data, token);
 
@@ -60,21 +75,7 @@ const updatePhoto = async (data, id, token) => {
   }
 };
 
-// Foto pelo id
-const getPhoto = async (id, token) => {
-  const config = requestConfig("GET", null, token);
-
-  try {
-    const res = await fetch(api + "/photos/" + id, config)
-      .then((res) => res.json())
-      .catch((err) => err);
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-// Like na foto
+// Like a photo
 const like = async (id, token) => {
   const config = requestConfig("PUT", null, token);
 
@@ -82,13 +83,14 @@ const like = async (id, token) => {
     const res = await fetch(api + "/photos/like/" + id, config)
       .then((res) => res.json())
       .catch((err) => err);
+
     return res;
   } catch (error) {
     console.log(error);
   }
 };
 
-// Comentar na foto
+// Add a comment to a photo
 const comment = async (data, id, token) => {
   const config = requestConfig("PUT", data, token);
 
@@ -103,9 +105,9 @@ const comment = async (data, id, token) => {
   }
 };
 
-// Todas as fotos
-const getPhotos = async (token) => {
-  const config = requestConfig("GET", null, token);
+// Get all photos
+const getPhotos = async () => {
+  const config = requestConfig("GET");
 
   try {
     const res = await fetch(api + "/photos", config)
@@ -118,9 +120,9 @@ const getPhotos = async (token) => {
   }
 };
 
-// Buscar foto pelo título
-const searchPhotos = async (query, token) => {
-  const config = requestConfig("GET", null, token);
+// Search photos by title
+const searchPhotos = async (query) => {
+  const config = requestConfig("GET");
 
   try {
     const res = await fetch(api + "/photos/search?q=" + query, config)
@@ -136,9 +138,9 @@ const searchPhotos = async (query, token) => {
 const photoService = {
   publishPhoto,
   getUserPhotos,
+  getPhoto,
   deletePhoto,
   updatePhoto,
-  getPhoto,
   like,
   comment,
   getPhotos,

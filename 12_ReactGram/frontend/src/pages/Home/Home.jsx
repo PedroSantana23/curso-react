@@ -1,11 +1,11 @@
 import "./Home.css";
 
-// Components
+// components
 import LikeContainer from "../../components/LikeContainer";
 import PhotoItem from "../../components/PhotoItem";
 import { Link } from "react-router-dom";
 
-// Hooks
+// hooks
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
@@ -21,13 +21,12 @@ const Home = () => {
   const { user } = useSelector((state) => state.auth);
   const { photos, loading } = useSelector((state) => state.photo);
 
-  // Carregar todas as fotos
+  // Load all photos
   useEffect(() => {
     dispatch(getPhotos());
   }, [dispatch]);
 
-  // Like na foto
-  const handleLike = (photo) => {
+  const handleLike = (photo = null) => {
     dispatch(like(photo._id));
 
     resetMessage();
@@ -39,17 +38,20 @@ const Home = () => {
 
   return (
     <div id="home">
-      {photos && photos.map((photo) => (
-        <div key={photo._id}>
-          <PhotoItem photo={photo}></PhotoItem>
-          <LikeContainer photo={photo} user={user} handleLike={handleLike}></LikeContainer>
-          <Link className="btn" to={`/photos/${photo._id}`}>Ver mais</Link>
-        </div>
-      ))}
+      {photos &&
+        photos.map((photo) => (
+          <div key={photo._id}>
+            <PhotoItem photo={photo} />
+            <LikeContainer photo={photo} user={user} handleLike={handleLike} />
+            <Link className="btn" to={`/photos/${photo._id}`}>
+              Ver mais
+            </Link>
+          </div>
+        ))}
       {photos && photos.length === 0 && (
         <h2 className="no-photos">
           Ainda não há fotos publicadas,{" "}
-          <Link to={`/users/${user._id}`}>Clique aqui</Link>
+          <Link to={`/users/${user.userId}`}>clique aqui</Link> para começar.
         </h2>
       )}
     </div>
